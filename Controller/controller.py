@@ -73,7 +73,7 @@ class Controller(Frame):
     menubar.add_cascade(label='Message',menu=menu3)
     menubar.add_cascade(label='DAQ mode',menu=menu4)
     menubar.add_cascade(label='Options',menu=menu5)
-    menubar.add_cascade(state=DISABLED,label=' ' * 68)
+    menubar.add_cascade(state=DISABLED,label=' ' * 62)
     menubar.add_cascade(label='Data Sync',menu=menu6)
     if len(secondary_path_list) == 0:
       menubar.entryconfig('Data Sync', state=DISABLED)

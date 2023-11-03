@@ -25,8 +25,8 @@ do
     nickname=rayraw-`expr + $i`
     dataport=`expr 9000 + $i`
     sitcp_ip=192.168.10.`expr 15 + $i`
-    min_window=0
-    max_window=1000
+    min_window=100
+    max_window=200
 
     $bin_dir/frontend_rayraw.sh \
 	$nickname \

@@ -281,7 +281,7 @@ int ReaderThread::active_loop()
   kol::TcpClient client;
   for (int numtry=0;;++numtry) {
     try {
-      client.Start(m_host, m_port);
+      client.Start(m_host.c_str(), m_port);
       break;
     } catch (kol::SocketException &e) {
       std::cerr << "Reader cnnection open error: " << e.what()

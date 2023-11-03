@@ -1,6 +1,9 @@
 #ifndef USERDEVICE_H
 #define USERDEVICE_H
 
+#include<string>
+#include<stdint.h>
+
 #include "nodeprop.h"
 #include "MessageHelper.h"
 

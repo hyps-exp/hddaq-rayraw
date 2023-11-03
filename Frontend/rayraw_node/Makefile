@@ -6,13 +6,13 @@
 TARGET	= rayraw_frontend
 
 CORE_DIR	= ../core
-HUL_CORE_DIR	= ../hul_core
+HUL_CORE_DIR	= ../hul_core_rayraw
 SRC_DIR		= src
 BIN_DIR		= bin
 BLD_DIR 	= build
 
 CXX		= g++
-CXXFLAGS	= -O2 -Wall --std=c++1y
+CXXFLAGS	= -O2 -Wall --std=c++17
 
 INCLUDES	= \
 	-I. -I$(CORE_DIR) -I$(HUL_CORE_DIR) -I$(SRC_DIR) \
