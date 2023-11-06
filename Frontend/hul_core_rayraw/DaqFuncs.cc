@@ -209,18 +209,14 @@ namespace HUL::DAQ{
   
     uint32_t received_bytes = 0;
     int recv_status = Receive(sock, (uint8_t*)buffer, kSizeHeader, received_bytes);
-    if(recv_status <= 0){
-          std::cout << "First Receive" << std::endl;
-	  return recv_status;
-    }
-    
+    if(recv_status <= 0) return recv_status;
+
     uint32_t n_word_data  = buffer[1] & 0x3ffff;
     uint32_t size_data    = n_word_data*TRG::kNumByte;
   
     if(n_word_data == 0) return TRG::kNumHead;
 
     recv_status = Receive(sock, (uint8_t*)(buffer + TRG::kNumHead), size_data, received_bytes);
-    std::cout << "Second Receive" << std::endl;
     if(recv_status <= 0) return recv_status;
   
     return TRG::kNumHead + n_word_data;
@@ -265,13 +261,6 @@ namespace HUL::DAQ{
 
     while(revd_size < length){
       tmp_ret = recv(sock, (char*)data_buf + revd_size, length -revd_size, 0);
-      std::cout << "sock = " << sock<< "\n"
-		<< "data_buf = " << &data_buf<< "\n"
-		<< "revd_size = " << revd_size<< "\n"
-		<< "length = " << length<< "\n"
-		<< "-revd_size = " << -revd_size<< "\n"
-		<< "tmp_ret = " << tmp_ret << "\n"
-		<< std::endl;
 
       if(tmp_ret == 0){
 	num_received_bytes = 0;

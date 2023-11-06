@@ -101,46 +101,32 @@ open_device( NodeProp& nodeprop )
   if(1 == fpga_module.ReadModule(ADC::kAddrAdcRoReset)){
     fpga_module.WriteModule(ADC::kAddrAdcRoReset, 0);
   }
-  std::cout << "AdcRo rest = " <<     fpga_module.ReadModule(ADC::kAddrAdcRoReset) << std::endl;
-
 
   // Set trigger path //
   uint32_t reg_trg = TRM::kRegL1Ext;
   fpga_module.WriteModule(TRM::kAddrSelectTrigger, reg_trg);
-  std::cout << std::hex << "SelectTrigger = " <<   fpga_module.ReadModule(TRM::kAddrSelectTrigger) << std::endl;
 
   // Set NIM-IN //
   fpga_module.WriteModule(IOM::kAddrExtL1, IOM::kReg_i_Nimin1);
-  std::cout << "kAddrExtL1 = " <<   fpga_module.ReadModule(IOM::kAddrExtL1) << std::endl;
   
   // Set TDC window //
   HUL::DAQ::SetTdcWindow(max_time_window, min_time_window, fpga_module);
-  std::cout << "kAddrPtrOfs = " << TDC::kAddrPtrOfs << std::endl;
-  std::cout << "kAddrWindowMax = " << TDC::kAddrWindowMax << std::endl;
-  std::cout << "kAddrWindowMin = " << TDC::kAddrWindowMin << std::endl;
   
   // Enable TDC block //
   uint32_t en_block = TDC::kEnLeading | TDC::kEnTrailing;
   fpga_module.WriteModule(TDC::kAddrEnableBlock, en_block);
-  std::cout << "kAddrEnableBlock = " <<  fpga_module.ReadModule(TDC::kAddrEnableBlock) << std::endl;
   
   // Set ADC window (same as TDC) //
   HUL::DAQ::SetAdcWindow(max_time_window, min_time_window, fpga_module);
-  std::cout << "kAddrPtrOfs = " << TDC::kAddrPtrOfs << std::endl;
-  std::cout << "kAddrWindowMax = " << TDC::kAddrWindowMax << std::endl;
-  std::cout << "kAddrWindowMin = " << TDC::kAddrWindowMin << std::endl;
   
   // Resest event counter //
   fpga_module.WriteModule(DCT::kAddrResetEvb, 0);
-  std::cout << "kAddrResetEvb = " <<  fpga_module.ReadModule(DCT::kAddrResetEvb) << std::endl;
+
+   // AdcRo initialize status
+  std::cout << "#D: AdcRo IsReady status: " << std::hex << fpga_module.ReadModule(ADC::kAddrAdcRoIsReady) << std::dec << std::endl;
 
   ::sleep(1);
 
-  {
-    std::cout << func_name << " hoge1 : Last line of  open_device " << std::endl;
-  }
-
-  //  fpga_module.WriteModule(DCT::kAddrDaqGate, 1);  
   return;
 }
 
@@ -150,15 +136,9 @@ init_device( NodeProp& nodeprop )
 {
   static const std::string& func_name(nick_name+" [::"+__func__+"()]");
 
-  // for operation check
-  {
-    std::cout << func_name << " hoge2 : First line of init_device " << ip << std::endl;
-  }
-
-
   // update DAQ mode
   g_daq_mode = nodeprop.getDaqMode();
-  std::cout << func_name << " hoge3 : hoge line of init_device " << ip << std::endl;
+
   //  event_num = 0;
 
   switch(g_daq_mode){
@@ -177,14 +157,12 @@ init_device( NodeProp& nodeprop )
 	send_normal_message( oss.str() );
       }
 
-      // // Start DAQ
+      // Start DAQ
       RBCP::UDPRBCP udp_rbcp(ip, RBCP::gUdpPort, RBCP::DebugMode::kNoDisp);
       HUL::FPGAModule fpga_module(udp_rbcp);
 
       fpga_module.WriteModule(DCT::kAddrDaqGate, 1);
          
-      std::cout << "kAddrDaqGate = " <<    fpga_module.ReadModule(DCT::kAddrDaqGate) << std::endl;
-      std::cout << "DM_NORMAL, DAQ Gate ON in init_device" << std::endl;
       return;
     }
   case DM_DUMMY:
@@ -202,8 +180,8 @@ finalize_device( NodeProp& nodeprop )
 {
 
   RBCP::UDPRBCP udp_rbcp(ip, RBCP::gUdpPort, RBCP::DebugMode::kNoDisp);
-  HUL::FPGAModule fModule(udp_rbcp);
-  fModule.WriteModule(DCT::kAddrDaqGate, 0);
+  HUL::FPGAModule fpga_module(udp_rbcp);
+  fpga_module.WriteModule(DCT::kAddrDaqGate, 0);
 
   ::sleep(1);
   unsigned int data[max_n_word];
@@ -232,8 +210,6 @@ wait_device( NodeProp& nodeprop )
   return  0: TRIGGED -> go read_device
 */
 {
-  std::cout << "userdevice.cc : wait device start" << std::endl;
-
   // const std::string& nick_name(nodeprop.getNickName());
   // const std::string& func_name(nick_name+" [::"+__func__+"()]");
   switch(g_daq_mode){
@@ -263,12 +239,9 @@ read_device( NodeProp& nodeprop, unsigned int* data, int& len )
   // const std::string& nick_name(nodeprop.getNickName());
   // const std::string& func_name(nick_name+" [::"+__func__+"()]");
 
-  std::cout << "userdevice.cc read_device start" << std::endl;
-
   switch(g_daq_mode){
   case DM_NORMAL:
     {
-      std::cout << "userdevice.cc First line for read_device, DM_NORMAL" <<std::endl;
       int ret_event_cycle = HUL::DAQ::DoEventCycle(sock, data);
       len = ret_event_cycle == -1 ? -1 : ret_event_cycle/sizeof(unsigned int);
       // if( len > 0 ){
