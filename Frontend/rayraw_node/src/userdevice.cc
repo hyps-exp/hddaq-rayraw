@@ -243,7 +243,7 @@ read_device( NodeProp& nodeprop, unsigned int* data, int& len )
   case DM_NORMAL:
     {
       int ret_event_cycle = HUL::DAQ::DoEventCycle(sock, data);
-      len = ret_event_cycle == -1 ? -1 : ret_event_cycle/sizeof(unsigned int);
+      len = ret_event_cycle == -1 ? -1 : ret_event_cycle;
       // if( len > 0 ){
       // 	for(int i = 0; i<n_word; ++i){
       // 	  printf("%x ", data[i]);
