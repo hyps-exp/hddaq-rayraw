@@ -260,7 +260,7 @@ namespace HUL::DAQ{
     int      ret_val   = HUL::DAQ::kRecvNormal;
 
     while(revd_size < length){
-      tmp_ret = recv(sock, (char*)data_buf + revd_size, length -revd_size, 0);
+      tmp_ret = recv(sock, (char*)data_buf + revd_size, length - revd_size, 0);
 
       if(tmp_ret == 0){
 	num_received_bytes = 0;

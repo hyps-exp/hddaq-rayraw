@@ -95,7 +95,7 @@ open_device( NodeProp& nodeprop )
   close(sock);
 
   RBCP::UDPRBCP udp_rbcp(ip, RBCP::gUdpPort, RBCP::DebugMode::kNoDisp); //kInteractive->kNoDisp FOura
-  HUL:: FPGAModule fpga_module(udp_rbcp);
+  HUL::FPGAModule fpga_module(udp_rbcp);
 
   // Release AdcRo reset
   if(1 == fpga_module.ReadModule(ADC::kAddrAdcRoReset)){
@@ -138,23 +138,27 @@ init_device( NodeProp& nodeprop )
 
   // update DAQ mode
   g_daq_mode = nodeprop.getDaqMode();
+  std::cout << "update DAQ mode : done " << g_daq_mode << std::endl; // add for debugging
 
   //  event_num = 0;
 
   switch(g_daq_mode){
   case DM_NORMAL:
     {
+      std::cout << "DM_NORMAL " << std::endl; // add for debugging
       while(0 > (sock = HUL::DAQ::ConnectSocket(ip) )){
 	std::ostringstream oss;
 	oss << func_name << " Connection fail : " << ip;
 	send_error_message( oss.str() );
 	std::cerr << oss.str() << std::endl;
+	std::cout << " 1. Connection fail : " << ip << std::endl; // add for debugging
       }
 
       {
 	std::ostringstream oss;
 	oss << func_name << " Connection done : " << ip;
 	send_normal_message( oss.str() );
+	std::cout << " 1. Connection done : " << ip << std::endl; // add for debugging
       }
 
       // Start DAQ
@@ -185,7 +189,7 @@ finalize_device( NodeProp& nodeprop )
 
   ::sleep(1);
   unsigned int data[max_n_word];
-  while(-1 != HUL::DAQ::DoEventCycle(sock, data));
+  while(HUL::DAQ::kRecvTimeOut != HUL::DAQ::DoEventCycle(sock, data)); // -1 -> HUL::DAQ::kRecvTimeOut (R.Kurata)
 
   shutdown(sock, SHUT_RDWR);
   close(sock);
@@ -243,20 +247,27 @@ read_device( NodeProp& nodeprop, unsigned int* data, int& len )
   case DM_NORMAL:
     {
       int ret_event_cycle = HUL::DAQ::DoEventCycle(sock, data);
-      len = ret_event_cycle == -1 ? -1 : ret_event_cycle;
+
+      std::cout << "(in read_device) EvCycle Return" << "\t" << " = " << ret_event_cycle << std::endl;
+
+      len = ret_event_cycle <= 0 ? -1 : ret_event_cycle;
       // if( len > 0 ){
       // 	for(int i = 0; i<n_word; ++i){
       // 	  printf("%x ", data[i]);
       // 	  if(i%8==0) printf("\n");
       // 	}
       // }
+
+      std::cout << "len (read_device) = " << len << std::endl; // add for debugging
       return len;
     }
+
   case DM_DUMMY:
     {
       len = 0;
       return 0;
     }
+
   default:
     len = 0;
     return 0;

@@ -24,8 +24,8 @@ do
     nodeid=`expr $((0x100)) + $i`
     nickname=rayraw-`expr + $i`
     dataport=`expr 9000 + $i`
-    sitcp_ip=192.168.10.`expr 15 + $i`
-    min_window=0
+    sitcp_ip=192.168.10.`expr 100 + $i`
+    min_window=100
     max_window=200
 
     $bin_dir/frontend_rayraw.sh \
@@ -34,7 +34,7 @@ do
 	$dataport \
 	$sitcp_ip \
 	$min_window \
-	$max_window \
-	>/dev/null 2>/dev/null &
+	$max_window
+#	>/dev/null 2>/dev/null &
 
 done
