@@ -161,10 +161,13 @@ init_device( NodeProp& nodeprop )
 	std::cout << " 1. Connection done : " << ip << std::endl; // add for debugging
       }
 
-      // Start DAQ
       RBCP::UDPRBCP udp_rbcp(ip, RBCP::gUdpPort, RBCP::DebugMode::kNoDisp);
       HUL::FPGAModule fpga_module(udp_rbcp);
 
+      // Resest event counter //
+      fpga_module.WriteModule(DCT::kAddrResetEvb, 0);
+
+      // Start DAQ
       fpga_module.WriteModule(DCT::kAddrDaqGate, 1);
          
       return;

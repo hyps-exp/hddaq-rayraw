@@ -54,7 +54,7 @@ int DaqThread::run()
   header->node_id = m_nodeprop.getNodeId();
 
 
-  //Use open_devide
+  //User open_device
   open_device(m_nodeprop);
   m_nodeprop.setStateAck(IDLE);
 
@@ -96,25 +96,27 @@ int DaqThread::run()
     m_nodeprop.setEventNumber( 0 );
     m_nodeprop.setEventSize( 0 );
 
-    //User init_devide
+    //User init_device
     init_device(m_nodeprop);
     m_nodeprop.setStateAck(RUNNING);
 
     while(m_nodeprop.getState() == RUNNING) {
 
-      //User wait_devide
+      //User wait_device
       int status = wait_device(m_nodeprop);
       if(status==-1) continue; //TIMEOUT or Fast CLEAR
 
       time_t t = time(0);
       header->unixtime = (unsigned int)t;
 
-      //User read_devide
+      //User read_device
       int len;
+      std::cout << "(before read_device) len " << "\t" << " = " << len << std::endl; // add for debugging
       status = read_device(m_nodeprop, data, len);
       if(status==-1) continue;
 
       len += event_header_len;
+      std::cout << "(after read_device) len " << "\t" << " = " << len << std::endl; // add for debugging
       header->size = len;
       m_nodeprop.setEventSize(len);
 
@@ -137,7 +139,7 @@ int DaqThread::run()
 
     } //while( getState() == RUNNING )
 
-    //User finalize_devide
+    //User finalize_device
     finalize_device(m_nodeprop);
 
 
@@ -146,7 +148,7 @@ int DaqThread::run()
 
   } //while( getState() == IDLE ){
 
-  //User close_devide
+  //User close_device
   close_device(m_nodeprop);
   delete buf;
 

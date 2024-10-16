@@ -193,8 +193,8 @@ if __name__ == '__main__':
   app.entry('DISTRIBUTOR', 'EventDistributor/bin/EventDistributor',
             '--node-id=80000')
   app.entry('RECORDER', 'Recorder/bin/Recorder',
-            '--node-id=70000 --dir='+storage_path)
-  #           '--node-id=70000 --compress --dir='+storage_path)
+           '--node-id=70000 --dir='+storage_path)
+            # '--node-id=70000 --compress --dir='+storage_path)
   app.controller_entry('CONTROLLER',
                        'Controller/controller.py '
                        +f'--data-path {storage_path} '
