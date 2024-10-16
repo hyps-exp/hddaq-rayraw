@@ -3,6 +3,7 @@ README.md
 
 ## Update
 
+- 2024.10.16 --- R. Kurata
 - 2022.08.26 --- S.H. Hayakawa
 - 2017.07.11 --- S.H. Hayakawa
 - 2017.03.11 --- S.H. Hayakawa
@@ -33,10 +34,16 @@ README.md
 
 python3 scripts need following libraries
 
+    **If you use AlmaLinux**
+    $ dnf install python3-pip
+    $ dnf install python3-tkinter
+
+    **Everyone**
     $ python3 -m pip install --user -U pip
     $ python3 -m pip install --user -U humanize
     $ python3 -m pip install --user -U pyyaml
     $ python3 -m pip install --user -U rich (optional)
+
 
 ## RUN
 
