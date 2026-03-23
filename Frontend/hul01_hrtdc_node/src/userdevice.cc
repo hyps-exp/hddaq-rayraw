@@ -410,7 +410,8 @@ init_device( NodeProp& nodeprop )
 
       fModule.WriteModule(TRM::kAddrSelectTrigger,
 			  TRM::kRegL1Ext | TRM::kRegL2J0 | TRM::kRegClrJ0
-			  | TRM::kRegEnL2 | TRM::kRegEnJ0,
+			  // | TRM::kRegEnL2 | TRM::kRegEnJ0,
+			  | TRM::kRegEnJ0,
 			  2);
       // fModule.WriteModule(TRM::kAddrSelectTrigger,
       // 			  TRM::kRegL1Ext | TRM::kRegL2Ext | TRM::kRegClrExt
@@ -437,9 +438,9 @@ init_device( NodeProp& nodeprop )
       fModule.WriteModule(IOM::kAddrExtL2,  IOM::kReg_i_Nimin2, 1);
       fModule.WriteModule(IOM::kAddrExtClr, IOM::kReg_i_Nimin3, 1);
       //fModule.WriteModule(IOM::kAddrExtBusy, IOM::kReg_i_Nimin2, 1);
-      //fModule.WriteModule(IOM::kAddrNimout1,  IOM::kReg_o_ModuleBusy, 1);
-      fModule.WriteModule(IOM::kAddrNimout1,  IOM::kAddrExtL1, 1);
-      fModule.WriteModule(IOM::kAddrNimout2,  IOM::kReg_o_clk10kHz, 1);
+      fModule.WriteModule(IOM::kAddrNimout1,  IOM::kReg_o_ModuleBusy, 1);
+      fModule.WriteModule(IOM::kAddrNimout2,  IOM::kAddrExtL1, 1);
+      fModule.WriteModule(IOM::kAddrNimout3,  IOM::kReg_o_clk1kHz, 1);
 
       // start DAQ
       if(en_slot_up){

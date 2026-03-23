@@ -17,14 +17,19 @@ sleep 1
 
 #start rayraw
 for i in $(seq 1 1)
-# for i in $(seq 2 2)
+#for i in $(seq 2 2)
+# for i in $(seq 1 2)
 do
     nodeid=`expr $((0x100)) + $i`
     nickname=rayraw-`expr + $i`
     dataport=`expr 9000 + $i`
-    sitcp_ip=192.168.10.`expr 100 + $i`
-    min_window=115
-    max_window=165
+    sitcp_ip=192.168.11.`expr 100 + $i`
+    # min_window=115
+    # max_window=165
+    # min_window=100
+    min_window=100
+    # max_window=600
+    max_window=200
 
     $bin_dir/frontend_rayraw.sh \
 	$nickname \
